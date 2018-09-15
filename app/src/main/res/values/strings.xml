@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">aplicativo</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="sem_paramento">Sem paramento</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="com_paramento">Com_paramento</string>
+    <string name="text">texto</string>
+</resources>
