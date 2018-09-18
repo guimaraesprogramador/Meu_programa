@@ -8,4 +8,19 @@
     tools:context=".Main3Activity"
     tools:showIn="@layout/activity_main3">
 
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/voltar" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

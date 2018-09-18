@@ -8,18 +8,4 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="221dp" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="110dp"
-        tools:layout_editor_absoluteY="88dp" />
 </android.support.constraint.ConstraintLayout>

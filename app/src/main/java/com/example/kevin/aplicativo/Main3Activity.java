@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 
 public class Main3Activity extends AppCompatActivity {
-
+Button com_paramento;
+    String a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +28,18 @@ public class Main3Activity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        Intent i = getIntent();
-       String a = i.getStringExtra("com");
-       if(a ==null) a = "";
+        final Intent i = getIntent();
+        a = i.getStringExtra("com");
+      com_paramento = (Button)findViewById(R.id.button);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      com_paramento.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              setResult(RESULT_OK,i);
+              i.putExtra("retornado_com","Retornado");
+              finish();
+          }
+      });
     }
 
 }

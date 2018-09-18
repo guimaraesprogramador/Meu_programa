@@ -1,7 +1,9 @@
 package com.example.kevin.aplicativo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -66,5 +68,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 1) {
+            mensagem("Ok você voltou ",data.getStringExtra("retornado_com"));
+        }
+    }
+    public void mensagem(String titulo, String mensagem) {
+        AlertDialog.Builder alertateste = new AlertDialog.Builder(MainActivity.this);
+        alertateste.setMessage(mensagem);
+        alertateste.setTitle(titulo);
+        alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        alertateste.show();
     }
 }
