@@ -12,6 +12,7 @@ import android.widget.Button;
 
 public class Main3Activity extends AppCompatActivity {
 Button com_paramento;
+
     String a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ Button com_paramento;
               finish();
           }
       });
+
     }
 
 }
