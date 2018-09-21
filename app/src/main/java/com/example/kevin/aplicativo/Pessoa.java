@@ -16,4 +16,13 @@ public class Pessoa implements Serializable {
         return cpf;
     }
     public int getCodigo(){return codigo;}
+    public  void  setCodigo(int codigo){
+         this.codigo = codigo;
+    }
+    public void  setNome(String nome){
+         this.nome = nome;
+    }
+    public  void  setCpf(String cpf){
+        this.cpf = cpf;
+    }
 }

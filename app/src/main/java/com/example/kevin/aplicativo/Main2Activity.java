@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.SQLTransactionRollbackException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
@@ -70,7 +71,7 @@ Button pesquisar;
         pesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new  DownloadJsonAsyncTask().execute("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+                new  DownloadJsonAsyncTask().execute("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
             }
         });
     }
@@ -86,10 +87,10 @@ Button pesquisar;
 
         protected List<Pessoa> doInBackground(String... params) {
             String url = params[0];
-            HttpClient HTTPCLIENTE = new DefaultHttpClient();
+            HttpClient http = new DefaultHttpClient();
             HttpGet request = new HttpGet(url);
             try {
-                HttpResponse response = HTTPCLIENTE.execute(request);
+                HttpResponse response = http.execute(request);
                 String paramento = buff(response);
                 List<Pessoa> pessoas = Lista_pessoar(paramento);
                 return pessoas;
@@ -101,6 +102,7 @@ Button pesquisar;
 
         @Override
         protected void onPostExecute(List<Pessoa> result) {
+            super.onPostExecute(result);
             dialog.dismiss();
             AlertDialog.Builder alertateste = new AlertDialog.Builder(Main2Activity.this);
             alertateste.setMessage("OK VOLTOU COM SUCESSO");
@@ -116,16 +118,33 @@ Button pesquisar;
         }
     }
     private List<Pessoa> Lista_pessoar(String json){
+        List<Pessoa> pessoaList = new ArrayList<Pessoa>();
+        try{
+           JSONArray array =  new JSONArray(json);
+           JSONObject object;
+            for (int i = 0;i<array.length();i++){
+                object = new JSONObject(array.getString(i));
+                Log.i("Pessoa","nome"+ object.getString("nome"));
+                Pessoa p  =new Pessoa();
+                p.setCodigo(object.getInt("codigo"));
+                p.setNome(object.getString("nome"));
+                p.setCpf(object.getString("cpf"));
+                pessoaList.add(p);
+            }
 
-        return null;
+        }catch (JSONException e){
+            Log.e("erro","nao foi possivel termina",e);
+        }
+        return pessoaList;
     }
     private  String buff(HttpResponse resposta) throws IOException {
 
         String line = "";
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(resposta.getEntity().getContent()));
+        StringBuilder  sb = new StringBuilder();
+        BufferedReader reader =null;
         try {
 
+        reader = new BufferedReader(new InputStreamReader(resposta.getEntity().getContent()));
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
