@@ -142,8 +142,7 @@ Button pesquisar;
                 }
             }
         }
-
-        return reader.toString();
+        return sb.toString();
     }
 
 }
