@@ -181,7 +181,7 @@ ListView visualizacao;
 
         String line = "";
         StringBuilder  sb = new StringBuilder();
-        BufferedReader reader =null;
+        BufferedReader reader = null;
         try {
 
         reader = new BufferedReader(new InputStreamReader(resposta.getEntity().getContent()));
