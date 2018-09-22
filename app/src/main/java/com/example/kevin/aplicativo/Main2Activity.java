@@ -3,6 +3,7 @@ package com.example.kevin.aplicativo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import org.apache.http.HttpMessage;
 import org.json.JSONArray;
@@ -42,12 +48,14 @@ Button volta_sem;
 Intent i;
 String sem_parameto;
 Button pesquisar;
+ListView visualizacao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        visualizacao = (ListView)findViewById(R.id.lista);
          i = getIntent();
          sem_parameto = i.getStringExtra("sem");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -71,9 +79,12 @@ Button pesquisar;
         pesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new  DownloadJsonAsyncTask().execute("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
+                new  DownloadJsonAsyncTask().execute("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+                //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
             }
+
         });
+        visualizacao.setOnItemClickListener(new ItemClickedListener());
     }
     class  DownloadJsonAsyncTask extends AsyncTask<String, Void, List<Pessoa>> {
         ProgressDialog dialog;
@@ -104,27 +115,43 @@ Button pesquisar;
         protected void onPostExecute(List<Pessoa> result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            AlertDialog.Builder alertateste = new AlertDialog.Builder(Main2Activity.this);
-            alertateste.setMessage("OK VOLTOU COM SUCESSO");
-            alertateste.setTitle("Retornou");
-            alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            if(result.size() >0){
+                ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Main2Activity.this,android.R.layout.simple_list_item_activated_1,result);
+                visualizacao.setAdapter(arrayAdapter);
 
-                public void onClick(DialogInterface dialog, int which) {
-                    // TODO Auto-generated method stub
+            }
+            else {
+                AlertDialog.Builder alertateste = new AlertDialog.Builder(Main2Activity.this);
+                alertateste.setMessage("ERRO");
+                alertateste.setTitle("NAO FOI POSSIVEL INFORMA OS ITENS");
+                alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
-                }
-            });
-            alertateste.show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+                alertateste.show();
+            }
         }
     }
+    private class ItemClickedListener implements android.widget.AdapterView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int
+                position, long id) {
+            Pessoa pe = (Pessoa) arg0.getItemAtPosition(position);
+            mensagem("Dados",pe.getNome() + ""+pe.getCpf());
+        }
+    }
+
     private List<Pessoa> Lista_pessoar(String json){
         List<Pessoa> pessoaList = new ArrayList<Pessoa>();
         try{
-           JSONArray array =  new JSONArray(json);
-           JSONObject object;
-            for (int i = 0;i<array.length();i++){
-                object = new JSONObject(array.getString(i));
+            JSONArray pessoasJson = new JSONArray(json);
+           JSONObject  object;
+            for (int i = 0;i<pessoasJson.length();i++){
+                object = new JSONObject(pessoasJson.getString(i));
                 Log.i("Pessoa","nome"+ object.getString("nome"));
+
                 Pessoa p  =new Pessoa();
                 p.setCodigo(object.getInt("codigo"));
                 p.setNome(object.getString("nome"));
@@ -136,6 +163,19 @@ Button pesquisar;
             Log.e("erro","nao foi possivel termina",e);
         }
         return pessoaList;
+    }
+    public void mensagem(String titulo, String mensagem) {
+        android.app.AlertDialog.Builder alertateste = new android.app.AlertDialog.Builder(Main2Activity.this);
+        alertateste.setMessage(mensagem);
+        alertateste.setTitle(titulo);
+        alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        alertateste.show();
     }
     private  String buff(HttpResponse resposta) throws IOException {
 
