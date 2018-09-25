@@ -79,7 +79,7 @@ ListView visualizacao;
         pesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new  DownloadJsonAsyncTask().execute("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+                new  DownloadJsonAsyncTask().execute("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
                 //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
             }
 
@@ -146,16 +146,19 @@ ListView visualizacao;
     private List<Pessoa> Lista_pessoar(String json){
         List<Pessoa> pessoaList = new ArrayList<Pessoa>();
         try{
-            JSONArray pessoasJson = new JSONArray(json);
-           JSONObject  object;
-            for (int i = 0;i<pessoasJson.length();i++){
-                object = new JSONObject(pessoasJson.getString(i));
+
+           JSONObject  object = new JSONObject();
+            JSONArray array = new JSONArray(json);
+            for (int i = 0;i<array.length();i++){
+                object.put("codigo",array.get(i));
+                object.put("nome",array.getString(i));
+                object.put("cpf",array.getString(i));
                 Log.i("Pessoa","nome"+ object.getString("nome"));
 
                 Pessoa p  =new Pessoa();
-                p.setCodigo(object.getInt("codigo"));
-                p.setNome(object.getString("nome"));
-                p.setCpf(object.getString("cpf"));
+                p.setCodigo((int)object.get("codigo"));
+                p.setNome((String)object.get("nome"));
+                p.setCpf((String)object.get("cpf"));
                 pessoaList.add(p);
             }
 
