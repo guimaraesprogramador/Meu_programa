@@ -25,4 +25,8 @@ public class Pessoa implements Serializable {
     public  void  setCpf(String cpf){
         this.cpf = cpf;
     }
+    @Override
+    public String toString() {
+        return  nome;
+    }
 }

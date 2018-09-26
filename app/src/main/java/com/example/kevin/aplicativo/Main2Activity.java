@@ -147,15 +147,16 @@ ListView visualizacao;
         List<Pessoa> pessoaList = new ArrayList<Pessoa>();
         try{
 
-           JSONObject  object = new JSONObject(json);
-
-            for (int i = 0;i<object.length();i++){
+           JSONArray array = new JSONArray(json);
+           JSONObject object;
+            for (int i = 0;i<array.length();i++){
+                object = new JSONObject(array.getString(i));
                 Log.i("Pessoa","nome"+ object.getString("nome"));
 
                 Pessoa p  =new Pessoa();
                 p.setCodigo(object.getInt("codigo"));
-                p.setNome((String)object.get("nome"));
-                p.setCpf((String)object.get("cpf"));
+                p.setNome(object.getString("nome"));
+                p.setCpf(object.getString("cpf"));
                 pessoaList.add(p);
             }
 
