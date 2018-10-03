@@ -1,5 +1,6 @@
 package com.example.kevin.aplicativo;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -53,6 +54,8 @@ Intent i;
 String sem_parameto;
 Button pesquisar;
 ListView visualizacao;
+
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ ListView visualizacao;
         visualizacao = (ListView)findViewById(R.id.lista);
          i = getIntent();
          sem_parameto = i.getStringExtra("sem");
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +94,7 @@ ListView visualizacao;
         });
         visualizacao.setOnItemClickListener(new ItemClickedListener());
     }
-    class  DownloadJsonAsyncTask extends AsyncTask<String, Void, List<Pessoa>> {
+   public class  DownloadJsonAsyncTask extends AsyncTask<String, Void, List<Pessoa>> {
         ProgressDialog dialog;
 
         @Override
@@ -185,45 +189,25 @@ ListView visualizacao;
     private  String buff(HttpResponse resposta) throws IOException {
 
         String line = "";
-        StringBuilder  sb = new StringBuilder();
-        BufferedReader reader =null;
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = null;
         try {
 
-        reader = new BufferedReader(new InputStreamReader(resposta.getEntity().getContent()));
+            reader = new BufferedReader(new InputStreamReader(resposta.getEntity().getContent()));
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-        }catch (Exception erro){
-        Log.e("erro", "algum lugar do codigo",erro);
-        }
-        finally {
-            if(reader != null){
+        } catch (Exception erro) {
+            Log.e("erro", "algum lugar do codigo", erro);
+        } finally {
+            if (reader != null) {
                 try {
                     reader.close();
-                }
-                catch (Exception erro){
-                    Log.e("erro","erro em fechar arquivo",erro);
+                } catch (Exception erro) {
+                    Log.e("erro", "erro em fechar arquivo", erro);
                 }
             }
         }
         return sb.toString();
-    }
-   public class Banco extends SQLiteOpenHelper {
-        static  final String database = "banco.mb";
-        static  final  int versao = 1;
-        public  Banco(Context banco){
-            super(banco,database,null,versao);
-        }
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-           db.execSQL("Create table if not exists sql ( id primary key not null, nome char(500) not null,codigo int not null,cpf char(500) not null)");
-
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db,0,versao);
-        onCreate(db);
-        }
     }
 }
