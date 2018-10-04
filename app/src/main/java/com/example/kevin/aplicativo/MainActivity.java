@@ -1,10 +1,12 @@
 package com.example.kevin.aplicativo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +18,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
+    SQLiteDatabase db;
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
-
-
-
-
+        sqlite sql = new sqlite(getBaseContext());
+        db = sql.getWritableDatabase();
+        sql.onCreate(db);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             j.putExtra("com","Messagem com Paramento");
             startActivityForResult(j,1);
         }
+
 
         return super.onOptionsItemSelected(item);
     }
