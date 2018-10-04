@@ -2,7 +2,9 @@ package com.example.kevin.aplicativo;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -53,8 +59,8 @@ Button carregar_banco;
       carregar_banco.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
-            new carregar_itens_em_thread();
+         List<Pessoa>a =    new downloader_json().baixar_arquivo();
+            new carregar_itens_em_thread().carregar(a);
 
           }
       });
@@ -64,37 +70,68 @@ Button carregar_banco;
         sqlite sqlite = new sqlite(getBaseContext());
         SQLiteDatabase db =  sqlite.getWritableDatabase();
        @SuppressLint("WrongConstant")
-       public  String carregar(final int id, final int cpf, final int codigo, final String nome){
+       public  void  carregar(final List<Pessoa>b){
+           final Handler handler = new Handler();
            try{
-               final Handler handler = new Handler();
-               db = openOrCreateDatabase(sqlite.database,SQLiteDatabase.CREATE_IF_NECESSARY,null);
+
+               sqlite sqlite= new sqlite(getBaseContext());
+               db = sqlite.getWritableDatabase();
+
                new Thread(new Runnable() {
-                   long resutlado;
+                   long resultado;
                    @Override
                    public void run() {
-                       handler.post(new Runnable() {
-                           @Override
-                           public void run() {
-                               ContentValues pessoas;
-                               pessoas = new ContentValues();
-                               pessoas.put("id",id);
-                               pessoas.put("cpf",cpf);
-                               pessoas.put("codigo",codigo);
-                               pessoas.put("nome",nome);
-                           }
-                       });
+
+                           handler.post(new Runnable() {
+                               @Override
+                               public void run() {
+                                   try{
+                                   JSONArray pessoasJson = new JSONArray(b);
+                                   JSONObject a;
+                                       ContentValues Values = new ContentValues();
+                                   for (int i =0;i<pessoasJson.length();i++){
+                                       a = new JSONObject(pessoasJson.getString(i));
+                                      Values.put("id",a.getInt("codigo"));
+                                        Values.put("codigo",a.getInt("codigo"));
+                                        Values.put("cpf",a.getString("cpf"));
+                                       Values.put("nome",a.getString("nome"));
+
+                                   }
+
+
+                                   resultado = db.insert("sql",null,Values);
+                                   messagem("ok", "inseir com sucesso");
+                               }catch (JSONException erro){
+
+                                   }
+                               }
+                           });
+
+
                    }
                });
-               return "ok";
            }catch (Exception err){
-               return  err.getMessage();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
            }
 
        }
-    }
-class  buscar_DownloadJsonAsyncTask{
-        public List<Pessoa>  procurar(){
-            return null;
+        public  void  messagem(String titulo ,String mensagem){
+            android.app.AlertDialog.Builder alertateste = new android.app.AlertDialog.Builder(Main3Activity.this);
+            alertateste.setMessage(mensagem);
+            alertateste.setTitle(titulo);
+            alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            alertateste.show();
         }
-}
+    }
 }
