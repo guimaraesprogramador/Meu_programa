@@ -63,12 +63,14 @@ Button carregar_banco;
 
         carregar_banco  =(Button) findViewById(R.id.button2);
       carregar_banco.setOnClickListener(new View.OnClickListener() {
+
+          ProgressDialog dialog;
           @Override
           public void onClick(View v) {
-              ProgressDialog dialog = ProgressDialog.show(Main3Activity.this, "Aguarde", "mantando para o banco o arquivo em json");
+
 
          List<Pessoa> pessoaList = new downloader_json().baixar_arquivo();
-
+              dialog = ProgressDialog.show(Main3Activity.this, "Aguarde", "mantando para o banco o arquivo em json");
              new carregar_itens_em_thread().carregar(pessoaList);
              dialog.dismiss();
 
@@ -85,41 +87,18 @@ Button carregar_banco;
 
        @SuppressLint("WrongConstant")
        public  void  carregar(final  List<Pessoa> b){
-           final Handler handler = new Handler();
-
-           Runnable inserir_dados_banco = new Runnable() {
-
                        long resultado;
-                       @Override
-                       public void run () {
-
-                           try {
-                               if(b != null) {
-
-
-                                   JSONObject jsonObject;
                                    ContentValues Values = null;
                                    for (int i = 0; i < b.size(); i++) {
-                                       JSONArray array = new JSONArray(b.get(i));
-                                        jsonObject = new JSONObject(array.getString(i));
+
                                        Values = new ContentValues();
-                                       Values.put("id", ("codigo"));
-                                       Values.put("codigo", jsonObject.getInt("codigo"));
-                                       Values.put("cpf", jsonObject.getString("cpf"));
-                                       Values.put("nome", jsonObject.getString("nome"));
+                                       Values.put("id", b.get(i).getId());
+                                       Values.put("codigo", b.get(i).getCodigo());
+                                       Values.put("cpf", b.get(i).getCpf());
+                                       Values.put("nome", b.get(i).getNome());
                                    }
-
-
                                    resultado = db.insert("sql", null, Values);
                                    messagem("ok", "inseir com sucesso");
-                               }
-
-                           } catch (Exception erro) {
-
-                           }
-                       }
-                   };
-           new Thread(inserir_dados_banco).start();
                }
 
         public  void  messagem(String titulo ,String mensagem){

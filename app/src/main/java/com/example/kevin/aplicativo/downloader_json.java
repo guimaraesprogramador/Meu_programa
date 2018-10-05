@@ -19,7 +19,8 @@ import java.util.List;
 
 public class downloader_json {
     public List <Pessoa> baixar_arquivo()  {
-      return doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
+      return doInBackground("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+      //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
     }
     private  String buff(HttpResponse resposta) throws IOException {
 

@@ -7,6 +7,11 @@ public class Pessoa implements Serializable {
     private String nome;
     private  String cpf;
     private  int codigo;
+    private  int id;
+
+    public int getId() {
+        return id;
+    }
 
     public String getNome() {
         return nome;
