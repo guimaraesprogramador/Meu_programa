@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class downloader_json {
-    public List <Pessoa> baixar_arquivo(){
-      return   doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
+    public List <Pessoa> baixar_arquivo()  {
+      return doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
     }
     private  String buff(HttpResponse resposta) throws IOException {
 
@@ -70,27 +70,42 @@ public class downloader_json {
     }
     public static String paramento;
     public  static List<Pessoa> pessoas;
-    private  List<Pessoa> doInBackground(final String params) {
-        Runnable Carregar = new Runnable() {
+    public JSONObject _mo = new JSONObject();
+    private boolean open = false;
+    private  List<Pessoa> doInBackground(final String params)  {
+        synchronized (_mo) {
+            try {
+                while (!open) {
+                    _mo.wait(1000);
+                    Runnable Carregar = new Runnable() {
 
-            @Override
-            public void run() {
-                try{
-                            HttpClient http = new DefaultHttpClient();
-                            HttpGet request = new HttpGet(params);
-                            HttpResponse response = http.execute(request);
-                            paramento = buff(response);
-                            pessoas = Lista_pessoar(paramento);
+                        @Override
+                        public void run() {
+                            try {
+                                HttpClient http = new DefaultHttpClient();
+                                HttpGet request = new HttpGet(params);
+                                HttpResponse response = http.execute(request);
+                                paramento = buff(response);
+                                pessoas = Lista_pessoar(paramento);
 
 
-                }catch (Exception err){
+                            } catch (Exception err) {
+
+                            }
+
+                        }
+                    };
+                    if (pessoas != null) {
+                       break;
+                    }
+                    new Thread(Carregar).start();
 
                 }
-
+            }catch (Exception err){
+                Log.e("erro","erro",err);
             }
-        };
-        new Thread(Carregar).start();
-        new Thread(Carregar).interrupt();
+
+        }
 
      return pessoas;
     }
