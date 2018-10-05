@@ -1,6 +1,7 @@
 package com.example.kevin.aplicativo;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonWriter;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+
+import static android.media.CamcorderProfile.get;
 
 public class Main3Activity extends AppCompatActivity {
 Button com_paramento;
@@ -59,8 +65,15 @@ Button carregar_banco;
       carregar_banco.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-         List<Pessoa>a =    new downloader_json().baixar_arquivo();
-            new carregar_itens_em_thread().carregar(a);
+              ProgressDialog dialog = ProgressDialog.show(Main3Activity.this, "Aguarde", "mantando para o banco o arquivo em json");
+
+         List<Pessoa> pessoaList = new downloader_json().baixar_arquivo();
+
+             new carregar_itens_em_thread().carregar(pessoaList);
+             dialog.dismiss();
+
+
+
 
           }
       });
@@ -69,57 +82,46 @@ Button carregar_banco;
 
         sqlite sqlite = new sqlite(getBaseContext());
         SQLiteDatabase db =  sqlite.getWritableDatabase();
+
        @SuppressLint("WrongConstant")
-       public  void  carregar(final List<Pessoa>b){
+       public  void  carregar(final  List<Pessoa> b){
            final Handler handler = new Handler();
-           try{
 
-               sqlite sqlite= new sqlite(getBaseContext());
-               db = sqlite.getWritableDatabase();
+           Runnable inserir_dados_banco = new Runnable() {
 
-               new Thread(new Runnable() {
-                   long resultado;
-                   @Override
-                   public void run() {
+                       long resultado;
+                       @Override
+                       public void run () {
 
-                           handler.post(new Runnable() {
-                               @Override
-                               public void run() {
-                                   try{
-                                   JSONArray pessoasJson = new JSONArray(b);
-                                   JSONObject a;
-                                       ContentValues Values = new ContentValues();
-                                   for (int i =0;i<pessoasJson.length();i++){
-                                       a = new JSONObject(pessoasJson.getString(i));
-                                      Values.put("id",a.getInt("codigo"));
-                                        Values.put("codigo",a.getInt("codigo"));
-                                        Values.put("cpf",a.getString("cpf"));
-                                       Values.put("nome",a.getString("nome"));
+                           try {
+                               if(b != null) {
 
+
+                                   JSONObject jsonObject;
+                                   ContentValues Values = null;
+                                   for (int i = 0; i < b.size(); i++) {
+                                       JSONArray array = new JSONArray(b.get(i));
+                                        jsonObject = new JSONObject(array.getString(i));
+                                       Values = new ContentValues();
+                                       Values.put("id", ("codigo"));
+                                       Values.put("codigo", jsonObject.getInt("codigo"));
+                                       Values.put("cpf", jsonObject.getString("cpf"));
+                                       Values.put("nome", jsonObject.getString("nome"));
                                    }
 
 
-                                   resultado = db.insert("sql",null,Values);
+                                   resultado = db.insert("sql", null, Values);
                                    messagem("ok", "inseir com sucesso");
-                               }catch (JSONException erro){
-
-                                   }
                                }
-                           });
 
+                           } catch (Exception erro) {
 
-                   }
-               });
-           }catch (Exception err){
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
+                           }
+                       }
+                   };
+           new Thread(inserir_dados_banco).start();
+               }
 
-                }
-            });
-           }
-
-       }
         public  void  messagem(String titulo ,String mensagem){
             android.app.AlertDialog.Builder alertateste = new android.app.AlertDialog.Builder(Main3Activity.this);
             alertateste.setMessage(mensagem);

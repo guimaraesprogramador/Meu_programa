@@ -1,5 +1,6 @@
 package com.example.kevin.aplicativo;
 
+import android.support.v7.widget.LinearSmoothScroller;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -17,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class downloader_json {
-    public List<Pessoa> baixar_arquivo(){
-        return  Lista_pessoar("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+    public List <Pessoa> baixar_arquivo(){
+      return   doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
     }
     private  String buff(HttpResponse resposta) throws IOException {
 
@@ -67,19 +68,31 @@ public class downloader_json {
         }
         return pessoaList;
     }
-    protected List<Pessoa> doInBackground(String... params) {
-        String url = params[0];
-        HttpClient http = new DefaultHttpClient();
-        HttpGet request = new HttpGet(url);
-        try {
-            HttpResponse response = http.execute(request);
-            String paramento = buff(response);
-            List<Pessoa> pessoas = Lista_pessoar(paramento);
-            return pessoas;
-        } catch (Exception erro) {
-            Log.e("eroo", "alguma coisa não deu certo", erro);
-        }
-        return null;
+    public static String paramento;
+    public  static List<Pessoa> pessoas;
+    private  List<Pessoa> doInBackground(final String params) {
+        Runnable Carregar = new Runnable() {
+
+            @Override
+            public void run() {
+                try{
+                            HttpClient http = new DefaultHttpClient();
+                            HttpGet request = new HttpGet(params);
+                            HttpResponse response = http.execute(request);
+                            paramento = buff(response);
+                            pessoas = Lista_pessoar(paramento);
+
+
+                }catch (Exception err){
+
+                }
+
+            }
+        };
+        new Thread(Carregar).start();
+        new Thread(Carregar).interrupt();
+
+     return pessoas;
     }
 
 }
