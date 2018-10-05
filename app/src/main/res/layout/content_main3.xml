@@ -18,7 +18,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="126dp"
             android:layout_weight="1">
 
             <TableRow
@@ -36,11 +36,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="carregar banco" />
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleciona" />
             </TableRow>
 
         </TableLayout>
 
         <ListView
+            android:id="@+id/lista"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />

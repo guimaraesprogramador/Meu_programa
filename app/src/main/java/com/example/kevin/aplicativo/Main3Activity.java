@@ -17,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.JsonWriter;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +34,8 @@ import static android.media.CamcorderProfile.get;
 public class Main3Activity extends AppCompatActivity {
 Button com_paramento;
 Button carregar_banco;
+Button selecionar;
+ListView lista;
     String a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +64,22 @@ Button carregar_banco;
               finish();
           }
       });
-
+        lista = (ListView)findViewById(R.id.lista);
         carregar_banco  =(Button) findViewById(R.id.button2);
       carregar_banco.setOnClickListener(new View.OnClickListener() {
 
 
           @Override
           public void onClick(View v) {
-
-
          List<Pessoa> pessoaList = new downloader_json().baixar_arquivo();
-
              new carregar_itens_em_thread().carregar(pessoaList);
-
-
-
-
-
+          }
+      });
+      selecionar = (Button) findViewById(R.id.button3);
+      selecionar.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+                new carregar_itens_em_thread().Select();
           }
       });
     }
@@ -119,6 +122,28 @@ Button carregar_banco;
                 }
             });
             alertateste.show();
+        }
+        public void Select(){
+           List<Pessoa> pessoaList =new ArrayList<Pessoa>();
+           String[] colunas ={"id","nome","nome","cpf"};
+           Cursor c = db.query("sql",colunas,null,null,null,null,null);
+           if(c.moveToFirst()){
+               boolean prox = true;
+               while (prox){
+                   Pessoa pessoa = new Pessoa();
+                   pessoa.setid(c.getInt(0));
+                  pessoa.setNome(c.getString(1));
+                  pessoa.setCodigo(c.getInt(2));
+                  pessoa.setCpf(c.getString(3));
+                   pessoaList.add(pessoa);
+                   prox = c.moveToNext();
+               }
+
+           }
+           if(pessoaList.size()>0){
+               ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Main3Activity.this,android.R.layout.simple_list_item_activated_1,pessoaList);
+               lista.setAdapter(arrayAdapter);
+           }
         }
     }
 }

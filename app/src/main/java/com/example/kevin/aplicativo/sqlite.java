@@ -12,7 +12,7 @@ public class sqlite extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("Create table if not exists sql ( id int not null, nome char(500) not null,codigo int not null,cpf char(500) not null)");
+        db.execSQL("Create table if not exists sql ( id primary key not null, nome char(500) not null,codigo int not null,cpf char(500) not null)");
 
     }
 

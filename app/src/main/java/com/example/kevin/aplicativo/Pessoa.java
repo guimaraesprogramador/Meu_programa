@@ -12,7 +12,7 @@ public class Pessoa implements Serializable {
     public int getId() {
         return id;
     }
-
+public int  setid(int id){return  this.id = id;}
     public String getNome() {
         return nome;
     }
