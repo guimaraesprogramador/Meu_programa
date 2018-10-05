@@ -69,9 +69,9 @@ public class downloader_json {
         }
         return pessoaList;
     }
-    public static String paramento;
-    public  static List<Pessoa> pessoas;
-    public JSONObject _mo = new JSONObject();
+    private static String paramento;
+    private   static List<Pessoa> pessoas;
+    private JSONObject _mo = new JSONObject();
     private boolean open = false;
     private  List<Pessoa> doInBackground(final String params)  {
         synchronized (_mo) {

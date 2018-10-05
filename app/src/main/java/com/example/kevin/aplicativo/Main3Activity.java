@@ -64,15 +64,15 @@ Button carregar_banco;
         carregar_banco  =(Button) findViewById(R.id.button2);
       carregar_banco.setOnClickListener(new View.OnClickListener() {
 
-          ProgressDialog dialog;
+
           @Override
           public void onClick(View v) {
 
 
          List<Pessoa> pessoaList = new downloader_json().baixar_arquivo();
-              dialog = ProgressDialog.show(Main3Activity.this, "Aguarde", "mantando para o banco o arquivo em json");
+
              new carregar_itens_em_thread().carregar(pessoaList);
-             dialog.dismiss();
+
 
 
 
@@ -81,24 +81,30 @@ Button carregar_banco;
       });
     }
     class carregar_itens_em_thread{
-
+        ProgressDialog dialog;
         sqlite sqlite = new sqlite(getBaseContext());
         SQLiteDatabase db =  sqlite.getWritableDatabase();
 
        @SuppressLint("WrongConstant")
        public  void  carregar(final  List<Pessoa> b){
-                       long resultado;
-                                   ContentValues Values = null;
-                                   for (int i = 0; i < b.size(); i++) {
+           try {
 
-                                       Values = new ContentValues();
-                                       Values.put("id", b.get(i).getId());
-                                       Values.put("codigo", b.get(i).getCodigo());
-                                       Values.put("cpf", b.get(i).getCpf());
-                                       Values.put("nome", b.get(i).getNome());
-                                   }
-                                   resultado = db.insert("sql", null, Values);
-                                   messagem("ok", "inseir com sucesso");
+               long resultado;
+               ContentValues Values = null;
+               for (int i = 0; i < b.size(); i++) {
+
+                   Values = new ContentValues();
+                   Values.put("id", b.get(i).getId());
+                   Values.put("codigo", b.get(i).getCodigo());
+                   Values.put("cpf", b.get(i).getCpf());
+                   Values.put("nome", b.get(i).getNome());
+               }
+               resultado = db.insert("sql", null, Values);
+               messagem("ok", "inseir com sucesso");
+           }catch (Exception err){
+               messagem("erro","nao foi possivel inserir os elemetntos ");
+           }
+
                }
 
         public  void  messagem(String titulo ,String mensagem){
