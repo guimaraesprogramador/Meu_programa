@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         sqlite sql = new sqlite(getBaseContext());
         db = sql.getWritableDatabase();
         sql.onCreate(db);
+        
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

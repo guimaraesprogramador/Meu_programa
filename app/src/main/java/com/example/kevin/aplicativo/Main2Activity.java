@@ -49,6 +49,7 @@ Intent i;
 String sem_parameto;
 Button pesquisar;
 ListView visualizacao;
+Button acessa_formulario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +76,19 @@ ListView visualizacao;
 
             }
         });
+        acessa_formulario = (Button) findViewById(R.id.button4);
+        acessa_formulario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Main2Activity.this, Formulario.class);
+                startActivity(i);
+            }
+        });
         pesquisar = (Button) findViewById(R.id.button8);
         pesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new  DownloadJsonAsyncTask().execute("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+                new  DownloadJsonAsyncTask().execute("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
                 //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
             }
 

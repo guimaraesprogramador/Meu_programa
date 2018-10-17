@@ -1,5 +1,7 @@
 package com.example.kevin.aplicativo;
 
+import android.app.ProgressDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.util.Log;
 
@@ -14,12 +16,20 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.PortUnreachableException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 
-public class downloader_json {
+public class downloader_json  {
+    ProgressDialog mprogressDialog;
+    public  downloader_json( Main3Activity main3Activity){
+        mprogressDialog = ProgressDialog.show(main3Activity, "Aguarde", "Verificando Produto(s)...");
+    }
     public List <Pessoa> baixar_arquivo()  {
-      return doInBackground("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+      return doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
       //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
     }
     private  String buff(HttpResponse resposta) throws IOException {
@@ -77,12 +87,18 @@ public class downloader_json {
         synchronized (_mo) {
             try {
                 while (!open) {
+
                     _mo.wait(1000);
+
                     Runnable Carregar = new Runnable() {
+
 
                         @Override
                         public void run() {
+
                             try {
+
+
                                 HttpClient http = new DefaultHttpClient();
                                 HttpGet request = new HttpGet(params);
                                 HttpResponse response = http.execute(request);
@@ -93,15 +109,19 @@ public class downloader_json {
                             } catch (Exception err) {
 
                             }
-
+                            if (pessoas != null) {
+                                open = true;
+                            }
                         }
+
+
                     };
-                    if (pessoas != null) {
-                       break;
-                    }
+
+
                     new Thread(Carregar).start();
 
                 }
+                mprogressDialog.dismiss();
             }catch (Exception err){
                 Log.e("erro","erro",err);
             }

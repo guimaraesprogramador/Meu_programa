@@ -36,6 +36,7 @@ Button com_paramento;
 Button carregar_banco;
 Button selecionar;
 ListView lista;
+
     String a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +67,16 @@ ListView lista;
       });
         lista = (ListView)findViewById(R.id.lista);
         carregar_banco  =(Button) findViewById(R.id.button2);
+
       carregar_banco.setOnClickListener(new View.OnClickListener() {
 
 
           @Override
           public void onClick(View v) {
-         List<Pessoa> pessoaList = new downloader_json().baixar_arquivo();
+
+         List<Pessoa> pessoaList = new downloader_json(Main3Activity.this).baixar_arquivo();
              new carregar_itens_em_thread().carregar(pessoaList);
+
           }
       });
       selecionar = (Button) findViewById(R.id.button3);
@@ -90,6 +94,8 @@ ListView lista;
 
        @SuppressLint("WrongConstant")
        public  void  carregar(final  List<Pessoa> b){
+          final ProgressDialog  mprogressDialog;
+           mprogressDialog = ProgressDialog.show(Main3Activity.this, "Aguarde", "Verificando Produto(s)...");
            try {
 
                long resultado;
@@ -101,8 +107,9 @@ ListView lista;
                    Values.put("codigo", b.get(i).getCodigo());
                    Values.put("cpf", b.get(i).getCpf());
                    Values.put("nome", b.get(i).getNome());
+                   resultado = db.insert("sqlite", null, Values);
                }
-               resultado = db.insert("sql", null, Values);
+                mprogressDialog.dismiss();
                messagem("ok", "inseir com sucesso");
            }catch (Exception err){
                messagem("erro","nao foi possivel inserir os elemetntos ");
@@ -125,8 +132,8 @@ ListView lista;
         }
         public void Select(){
            List<Pessoa> pessoaList =new ArrayList<Pessoa>();
-           String[] colunas ={"id","nome","nome","cpf"};
-           Cursor c = db.query("sql",colunas,null,null,null,null,null);
+           String[] colunas ={"id","nome","codigo","cpf"};
+           Cursor c = db.query("sqlite",colunas,null,null,null,null,null);
            if(c.moveToFirst()){
                boolean prox = true;
                while (prox){

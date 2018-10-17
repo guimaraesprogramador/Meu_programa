@@ -5,14 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class sqlite extends SQLiteOpenHelper {
-    static  final String database = "banco.mb";
+    static  final String database = "banco2db";
     static  final  int versao = 1;
     public  sqlite(Context banco){
         super(banco,database,null,versao);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("Create table if not exists sql ( id primary key not null, nome char(500) not null,codigo int not null,cpf char(500) not null)");
+        db.execSQL("Create table if not exists sqlite ( id int not null, nome char(500) not null,codigo int not null,cpf char(500) not null)");
 
     }
 

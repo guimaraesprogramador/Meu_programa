@@ -8,4 +8,5 @@
     <string name="text">texto</string>
     <string name="voltar">Volta</string>
     <string name="pesquisar">Pesquisar</string>
+    <string name="title_activity_formulario">Formulario</string>
 </resources>
