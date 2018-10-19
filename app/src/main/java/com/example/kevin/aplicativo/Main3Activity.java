@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.JsonWriter;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -53,6 +54,7 @@ ListView lista;
                         .setAction("Action", null).show();
             }
         });
+
         final Intent i = getIntent();
         a = i.getStringExtra("com");
       com_paramento = (Button)findViewById(R.id.button);
@@ -67,7 +69,7 @@ ListView lista;
       });
         lista = (ListView)findViewById(R.id.lista);
         carregar_banco  =(Button) findViewById(R.id.button2);
-
+        lista.setOnItemClickListener(new ItemClickedListener());
       carregar_banco.setOnClickListener(new View.OnClickListener() {
 
 
@@ -151,6 +153,15 @@ ListView lista;
                ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Main3Activity.this,android.R.layout.simple_list_item_activated_1,pessoaList);
                lista.setAdapter(arrayAdapter);
            }
+        }
+    }
+    private  class ItemClickedListener implements android.widget.AdapterView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int
+                position, long id) {
+            Pessoa pe = (Pessoa) arg0.getItemAtPosition(position);
+            Intent intent = new Intent(getApplicationContext(), Formulario.class);
+            intent.putExtra("pessoaclicada", pe);
+            startActivity( intent );
         }
     }
 }

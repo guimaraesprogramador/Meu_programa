@@ -49,7 +49,6 @@ Intent i;
 String sem_parameto;
 Button pesquisar;
 ListView visualizacao;
-Button acessa_formulario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,14 +73,6 @@ Button acessa_formulario;
 
                     finish();
 
-            }
-        });
-        acessa_formulario = (Button) findViewById(R.id.button4);
-        acessa_formulario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Main2Activity.this, Formulario.class);
-                startActivity(i);
             }
         });
         pesquisar = (Button) findViewById(R.id.button8);
@@ -148,7 +139,9 @@ Button acessa_formulario;
         public void onItemClick(AdapterView<?> arg0, View arg1, int
                 position, long id) {
             Pessoa pe = (Pessoa) arg0.getItemAtPosition(position);
-            mensagem("Dados",pe.getNome() + ""+pe.getCpf());
+            Intent intent = new Intent(getApplicationContext(), Formulario.class);
+            intent.putExtra("pessoaclicada", pe);
+            startActivity( intent );
         }
     }
 

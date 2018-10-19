@@ -1,6 +1,7 @@
 package com.example.kevin.aplicativo;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,11 +26,12 @@ public class Formulario extends AppCompatActivity {
 Button inserir;
 sqlite  sqlite;
 Button alterar;
+    private Pessoa pessoaclicada;
 
-    EditText id;
-    EditText nome;
     EditText codigo;
     EditText cpf;
+    ListView lista;
+    Button listar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,22 +39,28 @@ Button alterar;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         alterar = (Button) findViewById(R.id.button13);
-        inserir = (Button)  findViewById(R.id.button12);
-         id = (EditText) findViewById(R.id.editText);
-         nome = (EditText)findViewById(R.id.editText2);
-         codigo = (EditText)findViewById(R.id.editText3);
-         cpf = (EditText) findViewById(R.id.editText4);
-        inserir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                new modificar_bacnco().iniser_banco(id,nome,cpf,codigo);
-            }
-        });
+        codigo = (EditText)findViewById(R.id.editText2);
+         cpf = (EditText) findViewById(R.id.editText4);
+        pessoaclicada = (Pessoa) getIntent().getSerializableExtra( "pessoaclicada" );
+         if(pessoaclicada != null){
+             codigo.setText(pessoaclicada.getNome());
+             cpf.setText(pessoaclicada.getCpf());
+         }
+
+        lista = (ListView) findViewById(id.lista2);
+         listar = (Button) findViewById(id.button14);
+         listar.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 new modificar_bacnco().lista_banco();
+             }
+         });
+       
         alterar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new modificar_bacnco().alter_dados(id,nome,cpf,codigo);
+                new modificar_bacnco().alter_dados(cpf,codigo);
             }
         });
 
@@ -62,50 +72,52 @@ Button alterar;
                         .setAction("Action", null).show();
             }
         });
-
+        lista.setOnItemClickListener(new ItemClickedListener());
     }
-    class  modificar_bacnco{
+    class  modificar_bacnco {
         ListView lista;
         sqlite sqlite = new sqlite(getBaseContext());
-        SQLiteDatabase db =  sqlite.getWritableDatabase();
-        public void   iniser_banco(EditText id, EditText nome,EditText cpf,EditText codigo ){
-            try{
+        SQLiteDatabase db = sqlite.getWritableDatabase();
+
+        public void iniser_banco(EditText cpf, EditText codigo) {
+            try {
                 long resultado;
                 ContentValues Values = new ContentValues();
-                Values.put("id", String.valueOf(id));
-                Values.put("nome", String.valueOf(nome));
-                Values.put("cpf", String.valueOf(cpf));
-                Values.put("codigo", String.valueOf(codigo));
-                resultado = db.insert("sqlite",null,Values);
+                Values.put("cpf", cpf.getText().toString());
+                Values.put("codigo", codigo.getText().toString());
+                String id = pessoaclicada.getNome();
+                String[]agrs= {id};
+                 db.insert("sqlite", null, Values);
 
-            }catch (Exception err){
+            } catch (Exception err) {
 
             }
         }
-        public void  alter_dados(EditText id, EditText nome,EditText cpf,EditText codigo){
-            try{
+
+        public void alter_dados(EditText cpf, EditText codigo) {
+            try {
                 ContentValues v = new ContentValues();
-                v.put("id", String.valueOf(id));
-                v.put("codigo", String.valueOf(codigo));
-                v.put("cpf", String.valueOf(cpf));
-                v.put("nome", String.valueOf(nome));
-                String[] coluna = {"id"};
-                final int update = db.update("sqlte", v, "id", coluna);
-            }catch (Exception err){
-
+                v.put("nome", codigo.getText().toString());
+                v.put("cpf", cpf.getText().toString());
+                String ids = pessoaclicada.getNome();
+                String[] args = {ids};
+                db.update("sqlite", v, "nome=?", args);
+            } catch (Exception err) {
+                Log.e("err",err.getMessage());
             }
 
         }
-        public  void  lista_banco(){
-            try{
-                //lista = (ListView) findViewById(R.id.lista2);
+
+        public void lista_banco() {
+            try {
+                lista = (ListView) findViewById(id.lista2);
                 long resultado;
                 List<Pessoa> p = new ArrayList<Pessoa>();
-                 String[]coluna = {"id","codigo","nome","cpf"};
-                Cursor c= db.query("sqlite",coluna,null,null,null,null,null);
-                if(c.moveToFirst()){
-                    boolean proxi =true;
-                    while (proxi){
+                String[] coluna = {"id", "nome", "codigo", "cpf"};
+                Cursor c = db.query("sqlite", coluna, null, null, null, null, null);
+                if (c.moveToFirst()) {
+                    boolean proxi = true;
+                    while (proxi) {
                         Pessoa pessoa = new Pessoa();
                         pessoa.setid(c.getInt(0));
                         pessoa.setNome(c.getString(1));
@@ -114,14 +126,35 @@ Button alterar;
                         p.add(pessoa);
                         proxi = c.moveToNext();
                     }
-                    if(p.size()>0){
-                        ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Formulario.this,android.R.layout.simple_list_item_activated_1,p);
-                        //lista.setAdapter(arrayAdapter);
+                    if (p.size() > 0) {
+                        ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Formulario.this, android.R.layout.simple_list_item_activated_1, p);
+                        lista.setAdapter(arrayAdapter);
                     }
                 }
-            }catch (Exception err){
+            } catch (Exception err) {
 
             }
+        }
+
+    }
+    private class ItemClickedListener implements android.widget.AdapterView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int
+                position, long id) {
+            Pessoa pe = (Pessoa) arg0.getItemAtPosition(position);
+            mensagem(pe.getNome() + pe.getCpf(),pe.getNome() +"  "+ pe.getCpf() );
+        }
+        public void mensagem(String titulo, String mensagem) {
+            android.app.AlertDialog.Builder alertateste = new android.app.AlertDialog.Builder(Formulario.this);
+            alertateste.setMessage(mensagem);
+            alertateste.setTitle(titulo);
+            alertateste.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            alertateste.show();
         }
     }
 
