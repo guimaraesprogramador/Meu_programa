@@ -2,9 +2,11 @@ package com.example.kevin.aplicativo;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.kevin.aplicativo.banco.modicações;
+
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +33,10 @@ sqlite  sqlite;
 Button alterar;
     private Pessoa pessoaclicada;
 
-    EditText codigo;
+    EditText codigo, id,nome;
     EditText cpf;
     ListView lista;
-    Button listar;
+    Button listar, apagar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,28 +44,48 @@ Button alterar;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         alterar = (Button) findViewById(R.id.button13);
+        inserir = (Button)findViewById(R.id.button6);
 
         codigo = (EditText)findViewById(R.id.editText2);
          cpf = (EditText) findViewById(R.id.editText4);
+         id = (EditText) findViewById(R.id.editText3);
+         nome = (EditText)findViewById(R.id.editText);
         pessoaclicada = (Pessoa) getIntent().getSerializableExtra( "pessoaclicada" );
          if(pessoaclicada != null){
-             codigo.setText(pessoaclicada.getNome());
+             codigo.setText(String.valueOf(pessoaclicada.getCodigo()));
              cpf.setText(pessoaclicada.getCpf());
+             id .setText( String.valueOf(pessoaclicada.getId()));
+             nome.setText(pessoaclicada.getNome());
          }
-
-        lista = (ListView) findViewById(id.lista2);
-         listar = (Button) findViewById(id.button14);
+        lista = (ListView) findViewById(R.id.lista2);
+          inserir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new modicações(getBaseContext()).iniser_banco(cpf,codigo, id,nome);
+                new modicações(getBaseContext()).lista_banco(lista,Formulario.this);
+            }
+        });
+        lista = (ListView) findViewById(R.id.lista2);
+         listar = (Button) findViewById(R.id.button14);
          listar.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 new modificar_bacnco().lista_banco();
+                new modicações(getBaseContext()).lista_banco(lista,Formulario.this);
              }
          });
-       
+        apagar = (Button) findViewById(R.id.button9);
+        apagar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new modicações(getBaseContext()).deleta(pessoaclicada);
+                finish();
+            }
+        });
         alterar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new modificar_bacnco().alter_dados(cpf,codigo);
+                new modicações(getBaseContext()).alter_dados(cpf,codigo, id, nome,pessoaclicada);
+                new modicações(getBaseContext()).lista_banco(lista, Formulario.this);
             }
         });
 
@@ -73,69 +98,6 @@ Button alterar;
             }
         });
         lista.setOnItemClickListener(new ItemClickedListener());
-    }
-    class  modificar_bacnco {
-        ListView lista;
-        sqlite sqlite = new sqlite(getBaseContext());
-        SQLiteDatabase db = sqlite.getWritableDatabase();
-
-        public void iniser_banco(EditText cpf, EditText codigo) {
-            try {
-                long resultado;
-                ContentValues Values = new ContentValues();
-                Values.put("cpf", cpf.getText().toString());
-                Values.put("codigo", codigo.getText().toString());
-                String id = pessoaclicada.getNome();
-                String[]agrs= {id};
-                 db.insert("sqlite", null, Values);
-
-            } catch (Exception err) {
-
-            }
-        }
-
-        public void alter_dados(EditText cpf, EditText codigo) {
-            try {
-                ContentValues v = new ContentValues();
-                v.put("nome", codigo.getText().toString());
-                v.put("cpf", cpf.getText().toString());
-                String ids = pessoaclicada.getNome();
-                String[] args = {ids};
-                db.update("sqlite", v, "nome=?", args);
-            } catch (Exception err) {
-                Log.e("err",err.getMessage());
-            }
-
-        }
-
-        public void lista_banco() {
-            try {
-                lista = (ListView) findViewById(id.lista2);
-                long resultado;
-                List<Pessoa> p = new ArrayList<Pessoa>();
-                String[] coluna = {"id", "nome", "codigo", "cpf"};
-                Cursor c = db.query("sqlite", coluna, null, null, null, null, null);
-                if (c.moveToFirst()) {
-                    boolean proxi = true;
-                    while (proxi) {
-                        Pessoa pessoa = new Pessoa();
-                        pessoa.setid(c.getInt(0));
-                        pessoa.setNome(c.getString(1));
-                        pessoa.setCodigo(c.getInt(2));
-                        pessoa.setCpf(c.getString(3));
-                        p.add(pessoa);
-                        proxi = c.moveToNext();
-                    }
-                    if (p.size() > 0) {
-                        ArrayAdapter<Pessoa> arrayAdapter = new ArrayAdapter<Pessoa>(Formulario.this, android.R.layout.simple_list_item_activated_1, p);
-                        lista.setAdapter(arrayAdapter);
-                    }
-                }
-            } catch (Exception err) {
-
-            }
-        }
-
     }
     private class ItemClickedListener implements android.widget.AdapterView.OnItemClickListener {
         public void onItemClick(AdapterView<?> arg0, View arg1, int

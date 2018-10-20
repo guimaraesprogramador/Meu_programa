@@ -22,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.kevin.aplicativo.banco.modicações;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +69,7 @@ ListView lista;
               finish();
           }
       });
+
         lista = (ListView)findViewById(R.id.lista);
         carregar_banco  =(Button) findViewById(R.id.button2);
         lista.setOnItemClickListener(new ItemClickedListener());
@@ -86,6 +89,7 @@ ListView lista;
           @Override
           public void onClick(View v) {
                 new carregar_itens_em_thread().Select();
+
           }
       });
     }
@@ -162,6 +166,7 @@ ListView lista;
             Intent intent = new Intent(getApplicationContext(), Formulario.class);
             intent.putExtra("pessoaclicada", pe);
             startActivity( intent );
+
         }
     }
 }
