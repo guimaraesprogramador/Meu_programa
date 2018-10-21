@@ -53,9 +53,9 @@ public  modicações(Context get ){
                 v.put("cpf", cpf.getText().toString());
                 v.put("id", id.getText().toString());
                 v.put("nome",nome.getText().toString());
-                String ids = String.valueOf( pessoaclicada.getId());
+                String ids = pessoaclicada.getNome();
                 String[] args = {ids};
-                db.update("sqlite", v, "id=?", args);
+                db.update("sqlite", v, "nome=?", args);
 
             } catch (Exception err) {
                 Log.e("err",err.getMessage());
