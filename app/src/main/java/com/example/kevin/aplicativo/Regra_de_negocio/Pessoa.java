@@ -1,4 +1,4 @@
-package com.example.kevin.aplicativo;
+package com.example.kevin.aplicativo.Regra_de_negocio;
 
 import java.io.Serializable;
 

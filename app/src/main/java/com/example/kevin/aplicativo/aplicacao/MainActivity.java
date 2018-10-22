@@ -1,9 +1,7 @@
-package com.example.kevin.aplicativo;
+package com.example.kevin.aplicativo.aplicacao;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+
+import com.example.kevin.aplicativo.R;
+import com.example.kevin.aplicativo.Regra_de_negocio.sqlite;
 
 public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;

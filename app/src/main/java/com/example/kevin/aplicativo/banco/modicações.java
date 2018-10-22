@@ -2,23 +2,19 @@ package com.example.kevin.aplicativo.banco;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.kevin.aplicativo.Formulario;
-import com.example.kevin.aplicativo.Pessoa;
-import com.example.kevin.aplicativo.R;
-import com.example.kevin.aplicativo.sqlite;
+import com.example.kevin.aplicativo.aplicacao.Formulario;
+import com.example.kevin.aplicativo.Regra_de_negocio.Pessoa;
+import com.example.kevin.aplicativo.Regra_de_negocio.sqlite;
+import com.example.kevin.aplicativo.aplicacao.Main3Activity;
 
-import java.time.chrono.Chronology;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +59,7 @@ public  modicações(Context get ){
 
         }
 
-        public void lista_banco(   ListView lista, Formulario a) {
+        public void lista_banco(ListView lista, Formulario a) {
             try {
 
                 long resultado;
@@ -93,8 +89,8 @@ public  modicações(Context get ){
         }
         public void deleta(Pessoa pessoaclicada){
             
-            String ids = String.valueOf( pessoaclicada.getId());
+            String ids = pessoaclicada.getNome();
             String[] args = {ids};
-            db.delete("sqlite","id=?",args);
+            db.delete("sqlite","nome=?",args);
         }
     }

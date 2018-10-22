@@ -1,4 +1,4 @@
-package com.example.kevin.aplicativo;
+package com.example.kevin.aplicativo.aplicacao;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -8,27 +8,21 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ParcelUuid;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.JsonWriter;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.kevin.aplicativo.banco.modicações;
+import com.example.kevin.aplicativo.R;
+import com.example.kevin.aplicativo.Regra_de_negocio.Pessoa;
+import com.example.kevin.aplicativo.Regra_de_negocio.downloader_json;
+import com.example.kevin.aplicativo.Regra_de_negocio.sqlite;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +32,7 @@ public class Main3Activity extends AppCompatActivity {
 Button com_paramento;
 Button carregar_banco;
 Button selecionar;
-ListView lista;
+ ListView lista;
 
     String a;
     @Override
@@ -95,7 +89,7 @@ ListView lista;
     }
     class carregar_itens_em_thread{
         ProgressDialog dialog;
-        sqlite sqlite = new sqlite(getBaseContext());
+        com.example.kevin.aplicativo.Regra_de_negocio.sqlite sqlite = new sqlite(getBaseContext());
         SQLiteDatabase db =  sqlite.getWritableDatabase();
 
        @SuppressLint("WrongConstant")

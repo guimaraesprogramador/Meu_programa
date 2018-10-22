@@ -1,35 +1,26 @@
-package com.example.kevin.aplicativo;
+package com.example.kevin.aplicativo.aplicacao;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.kevin.aplicativo.R;
+import com.example.kevin.aplicativo.Regra_de_negocio.Pessoa;
 import com.example.kevin.aplicativo.banco.modicações;
-
-import java.net.IDN;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.kevin.aplicativo.R.*;
 
 public class Formulario extends AppCompatActivity {
 Button inserir;
-sqlite  sqlite;
+com.example.kevin.aplicativo.Regra_de_negocio.sqlite sqlite;
 Button alterar;
     private Pessoa pessoaclicada;
 
@@ -45,7 +36,6 @@ Button alterar;
         setSupportActionBar(toolbar);
         alterar = (Button) findViewById(R.id.button13);
         inserir = (Button)findViewById(R.id.button6);
-
         codigo = (EditText)findViewById(R.id.editText2);
          cpf = (EditText) findViewById(R.id.editText4);
          id = (EditText) findViewById(R.id.editText3);

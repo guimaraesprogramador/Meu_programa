@@ -1,9 +1,9 @@
-package com.example.kevin.aplicativo;
+package com.example.kevin.aplicativo.Regra_de_negocio;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.util.Log;
+
+import com.example.kevin.aplicativo.aplicacao.Main3Activity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,12 +16,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.PortUnreachableException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 
 public class downloader_json  {
     ProgressDialog mprogressDialog;
