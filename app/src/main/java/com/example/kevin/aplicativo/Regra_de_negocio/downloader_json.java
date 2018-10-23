@@ -25,7 +25,7 @@ public class downloader_json  {
         mprogressDialog = ProgressDialog.show(main3Activity, "Aguarde", "Verificando Produto(s)...");
     }
     public List <Pessoa> baixar_arquivo()  {
-      return doInBackground("http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json");
+      return doInBackground("http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json");
       //http://192.168.181.134/apicliente/api/cliente/retornaclientes?tipo=json
         //http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json
     }
